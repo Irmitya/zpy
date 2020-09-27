@@ -1037,7 +1037,7 @@ class Constraint(Constraint):
                     (armature, name) = new_objects[src]
                     bone = armature.pose.bones[name]
                     self.set_pose_bone(context, bone, src)
-                    Set.bone_group(bone, f"{self.type}||{hash(self)}")
+                    Set.bone_group(bone, f"{self.type}||{hash(self)}", color=True)
                     new_objects[src] = bone
                     Set.select(src, False)
                     Set.select(bone, True)
