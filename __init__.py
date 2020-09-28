@@ -1971,7 +1971,6 @@ class Is:
             return True
         else:
             assert None, ("Have not calculated for this data type " + repr(src))
-            return
 
         if obj.proxy or obj.library:
             return True
