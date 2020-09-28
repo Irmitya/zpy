@@ -3665,6 +3665,9 @@ class Set:
         # for obj in objects:
             # select(obj, False)
 
+        if Is.linked(target) and mode not in ('OBJECT', 'POSE'):
+            return False
+
         class active_item:
             mode = target.mode
             is_visible = Set.visible(context, target, True)
