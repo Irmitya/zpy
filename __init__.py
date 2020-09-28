@@ -1964,6 +1964,11 @@ class Is:
             obj = src.id_data
         elif Is.object(src):
             obj = src
+        elif Is.bone(src):
+            return bool(src.id_data.library)
+        elif Is.editbone(src):
+            # You can't access edit bones without edit mode
+            return True
         else:
             assert None, ("Have not calculated for this data type " + repr(src))
             return
