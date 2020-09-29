@@ -1,8 +1,6 @@
 "Get various variables"
 import bpy
 from zpy import Is, utils
-is27 = bpy.app.version < (2, 80, 0)
-is28 = not is27
 
 
 # -------------------------------------------------------------------------
@@ -789,21 +787,7 @@ def active(context, mode=None):
     return active
 
 def cursor(context):
-    ""
-
-    scn = context.scene
-
-    if is27:
-        class cursor:
-            location = scn.cursor_location
-            rotation_axis_angle = Quaternion()
-            rotation_euler = Euler()
-            rotation_mode = 'EULER'
-            rotation_quaternion = Quaternion()
-    if is28:
-        cursor = scn.cursor
-
-    return cursor
+    return context.scene.cursor
 
 def frame_mapped(context, frame=None):
     """Get the time remapped original of the frame # or frame current"""
@@ -942,8 +926,7 @@ def in_view(context, *views, **filters):
     items = []
 
     if not views:
-        if is27: views = [context.scene]
-        if is28: views = [context.view_layer]
+        views = [context.view_layer]
 
     if not filters:
         filters = dict(
@@ -1058,18 +1041,13 @@ def objects(context, collection=None, link=False):
     (for example, to set the active object)
     """
 
-    if is27:
-        objects = context.scene.objects
-        if collection:  # group
-            objects = collection.objects
-    if is28:
-        objects = context.view_layer.objects  # active scene's objects (all)
-        if link:
-            # 2.8 can only link to collections
-            objects = context.scene.collection.objects
-            # active scene's objects without a collection
-        if collection:
-            objects = collection.objects
+    objects = context.view_layer.objects  # active scene's objects (all)
+    if link:
+        # 2.8 can only link to collections
+        objects = context.scene.collection.objects
+        # active scene's objects without a collection
+    if collection:
+        objects = collection.objects
 
     return objects
 

@@ -1,5 +1,4 @@
 """shortcuts for invoking popup windows"""
-import bpy
 
 
 def _draw(draw=None):
@@ -22,10 +21,7 @@ def popover(context, draw_menu=None, *args, **kargs):
     wm = context.window_manager
     d = popup._draw(draw_menu)
 
-    is27 = bpy.app.version < (2, 80, 0)
-    is28 = not is27
-    if is28: wm.popover(d, *args, **kargs)
-    if is27: wm.popup_menu(d, title="popover not in 2.7!", icon='ERROR')
+    wm.popover(d, *args, **kargs)
 
     return {'CANCELLED'}
 

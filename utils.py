@@ -4,8 +4,6 @@ Generally either does one specific thing without any context
 """
 import bpy
 from zpy import Get, Is
-is27 = bpy.app.version < (2, 80, 0)
-is28 = not is27
 
 
 def clear_console():
@@ -382,8 +380,7 @@ def multiply_matrix(*matrices):
 
     merge = Matrix()
     for mat in matrices:
-        if is28: sym = '@'
-        if is27 or Is.digit(mat): sym = '*'
+        sym = '*' if Is.digit(mat) else '@'
         merge = eval(f'{merge!r} {sym} {mat!r}')
 
     return merge
@@ -422,8 +419,6 @@ def poll_workspace(self, context):
     # bl_region_type = 'WINDOW'
     # bl_context = ".workspace"
     """Only display a panel if it's in the workspace"""
-
-    if is27: return True
 
     # return context.area.type != 'VIEW_3D'
     return context.area.type == 'PROPERTIES'
@@ -522,18 +517,15 @@ def register_timer(wait, function, *args, use_threading=False, **keywords):
     import time
     import functools
 
-    is27 = bpy.app.version < (2, 80, 0)
-    is28 = not is27
-
     def looper(*args, **keywords):
         try:
             exit = function(*args, **keywords)  # Digit for new wait
-            if is27 or use_threading:
+            if use_threading:
                 while exit is not None:
                     if exit is not None:
                         time.sleep(exit)
                         exit = function(*args, **keywords)  # Digit for new wait
-            elif is28:
+            else:
                 return (exit, None)[exit is None]
         except:
             utils.error(
@@ -542,11 +534,11 @@ def register_timer(wait, function, *args, use_threading=False, **keywords):
             )
             return
 
-    if is27 or use_threading:
+    if use_threading:
         timer = threading.Timer(
             wait, looper, args=args, kwargs=keywords)
         timer.start()
-    elif is28:
+    else:
         bpy.app.timers.register(
             functools.partial(looper, *args, **keywords),
             first_interval=wait)

@@ -91,7 +91,6 @@ def camera(src):
     return bool(Is.object(src) and src.type in {'CAMERA'})
 
 def collection(src):
-    # if is27: return False
     return isinstance(src, bpy.types.Collection)
 
 def curve(src):
@@ -344,10 +343,6 @@ def visible(context, src, viewport=False):
         if not (Is.in_scene(context, src) and Is.in_view(context, src)):
             # Object not in active scene and/or deleted
             return
-
-        is27 = bpy.app.version < (2, 80, 0)
-        if is27:
-            return src.is_visible(context.scene)
 
         vl = context.view_layer
         if src in vl.objects.values():
