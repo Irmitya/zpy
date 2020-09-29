@@ -2230,7 +2230,7 @@ class utils:
             while 3600 <= second:  # Hours
                 hour += 1
                 second -= 3600
-            while 60 <= micro:  # Minutes
+            while 60 <= second:  # Minutes
                 minute += 1
                 second -= 60
 
@@ -2244,7 +2244,7 @@ class utils:
 
             if log:
                 log += f"{micro}"
-            elif ms:
+            elif micro:
                 log += f"{micro / 1000} ms"  # micro to milli
             else:
                 log = 'None'
