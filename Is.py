@@ -267,7 +267,7 @@ def linked(src):
         return bool(src.id_data.library)
     elif Is.editbone(src):
         # You can't access edit bones without edit mode
-        return True
+        return False
     else:
         assert None, ("Have not calculated for this data type " + repr(src))
 
