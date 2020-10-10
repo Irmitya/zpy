@@ -14,6 +14,16 @@ badBonePrefixes = (
     'VIS',
     # ... more can be added here as you need in your own rigs ...
 )
+bbone_rotation = (
+    'bbone_curveinx', 'bbone_curveoutx',
+    'bbone_curveiny', 'bbone_curveouty',
+    'bbone_rollin', 'bbone_rollout',
+)
+bbone_scale = (
+    'bbone_scaleinx', 'bbone_scaleiny',
+    'bbone_scaleoutx', 'bbone_scaleouty',
+    'bbone_easein', 'bbone_easeout',
+)
 # file:///C:\Program%20Files\Blender%20Foundation\Blender\2.91\scripts\startup\keyingsets_builtins.py
 # file:///C:\Program%20Files\Blender%20Foundation\Blender\2.91\scripts\modules\keyingsets_utils.py
 
