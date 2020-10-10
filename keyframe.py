@@ -1,6 +1,6 @@
 "shortcuts for inserting keyframes"
 import bpy
-from zpy import Get, Is, New
+from zpy import Get, Is, New, utils
 
 
 # these prefixes should be avoided, as they are not really bones
@@ -14,9 +14,8 @@ badBonePrefixes = (
     'VIS',
     # ... more can be added here as you need in your own rigs ...
 )
-
-# file:///C:\Program%20Files\Blender%20Foundation\Blender\2.80\scripts\startup\keyingsets_builtins.py
-# file:///C:\Program%20Files\Blender%20Foundation\Blender\2.80\scripts\modules\keyingsets_utils.py
+# file:///C:\Program%20Files\Blender%20Foundation\Blender\2.91\scripts\startup\keyingsets_builtins.py
+# file:///C:\Program%20Files\Blender%20Foundation\Blender\2.91\scripts\modules\keyingsets_utils.py
 
 def group_name(src):
     if Is.object(src):
