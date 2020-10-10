@@ -188,7 +188,7 @@ def armature(context, name="Armature", display_type=None, link=True):
 
     return New.object(context, name, data, link)
 
-def bone(context, armature, name="", edits=[], poses=[]):
+def bone(context, armature, name="", edit=None, pose=None, overwrite=False):
     "Insert a bone into an armature object"
 
     if getattr(armature, 'type', None) != 'ARMATURE':
@@ -212,23 +212,29 @@ def bone(context, armature, name="", edits=[], poses=[]):
         Set.mode(context, armature, 'EDIT')
     mirror = armature.data.use_mirror_x
     armature.data.use_mirror_x = False
+    children = list()
+    if overwrite and name in ebones:
+        for child in ebones[name].children:
+            children.append((child, child.use_connect))
+            child.use_connect = False
+        ebones.remove(ebones[name])
     bone = ebones.new(name)
+    for child, child_connect in children:
+        child.parent = bone
+        child.use_connect = child_connect
     bone.tail = ((0, 0, 1))
         # If the bone's head AND tail stay at 0,
         # it gets deleted when leaving edit mode
     name = bone.name
-    # for tweak in edits:
-    #     if tweak:
-    #         tweak(bone)
+    if edit:
+        edit(bone)
     armature.data.use_mirror_x = mirror
 
     pbones = armature.pose.bones
-    # if poses:
-    #     Set.mode(context, armature, 'POSE')
-    #     bone = pbones[name]
-    #     for tweak in poses:
-    #         if tweak:
-    #             tweak(bone)
+    if pose:
+        Set.mode(context, armature, 'POSE')
+        bone = pbones[name]
+        pose(bone)
 
     # Revert mode change
     if mode != armature.mode:
