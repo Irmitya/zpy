@@ -266,6 +266,97 @@ def find_op(idname):
         # debug(f"ERROR: Can't register keymap, operator not found [{idname!r}]")
         return
 
+def flip_name(name, split=False, only_split=False):
+    if len(name) < 3:
+        if split:
+            return (name, "", "", "")
+        else:
+            return name
+
+    is_set = False
+    prefix = replace = previous = suffix = number = str()
+
+    # /* We first check the case with a .### extension, let's find the last period */
+    if (Is.digit(name[-1]) and ("." in name)):
+        index = name.rsplit(".", 1)
+        if Is.digit(index[1]):
+            name = index[0]
+            number = '.' + index[1]
+        del index
+    prefix = name  # set now in case none of the checks below get a flip
+
+    # /* first case; separator . - _ with extensions r R l L  */
+    if ((len(name) > 1) and (name[-2] in (' .-_'))):
+        is_set = True
+        previous = name[-1]
+        if name[-1] == 'l':
+            prefix = name[:-1]
+            replace = 'r'
+        elif name[-1] == 'r':
+            prefix = name[:-1]
+            replace = 'l'
+        elif name[-1] == 'L':
+            prefix = name[:-1]
+            replace = 'R'
+        elif name[-1] == 'R':
+            prefix = name[:-1]
+            replace = 'L'
+        else:
+            is_set = False
+            previous = ""
+
+    # /* case; beginning with r R l L, with separator after it */
+    if ((not is_set) and (len(name) > 1) and (name[1] in (' .-_'))):
+        is_set = True
+        previous = name[0]
+        if name[0] == 'l':
+            replace = 'r'
+            suffix = name[1:]
+        elif name[0] == 'r':
+            replace = 'l'
+            suffix = name[1:]
+        elif name[0] == 'L':
+            replace = 'R'
+            suffix = name[1:]
+        elif name[0] == 'R':
+            replace = 'L'
+            suffix = name[1:]
+        else:
+            is_set = False
+            previous = ""
+
+    if (not is_set and len(name) > 5):
+        # /* hrms, why test for a separator? lets do the rule 'ultimate left or right' */
+        if name.lower().startswith("right") or name.lower().endswith("right"):
+            index = name.lower().index("right")
+            replace = name[index:index + 5]
+            previous = replace
+            (prefix, suffix) = name.split(replace, 1)
+            if replace[0] == "r":
+                replace = "left"
+            elif replace[1] == "I":
+                replace = "LEFT"
+            else:
+                replace = "Left"
+        elif name.lower().startswith("left") or name.lower().endswith("left"):
+            index = name.lower().index("left")
+            replace = name[index:index + 4]
+            previous = replace
+            (prefix, suffix) = name.split(replace, 1)
+            if replace[0] == "l":
+                replace = "right"
+            elif replace[1] == "E":
+                replace = "RIGHT"
+            else:
+                replace = "Right"
+
+    if only_split:
+        return (prefix, previous, suffix, number)
+    elif split:
+        return (prefix, replace, suffix, number)
+    else:
+        return prefix + replace + suffix + number
+
 def layer(*ins, max=32):
     """Get a layer array with only the specified layers enabled"""
 
