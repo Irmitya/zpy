@@ -20,11 +20,10 @@ def float(src):
     float = __builtins__['float']
     if Is.string(src):
         try:
-            return bool(Get.as_float(src))
+            src = Get.as_float(src)
         except:
             return False
-    else:
-        return isinstance(src, float)
+    return isinstance(src, float)
 
 def int(src):
     """src is a whole number"""
@@ -32,11 +31,10 @@ def int(src):
     int = __builtins__['int']
     if Is.string(src):
         try:
-            return bool(Get.as_int(src))
+            src = Get.as_int(src)
         except:
             return False
-    else:
-        return isinstance(src, int)
+    return isinstance(src, int)
 
 def iterable(src):
     """item can be search like a list"""
