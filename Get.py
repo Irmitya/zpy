@@ -202,13 +202,22 @@ def constraint_target(con):
 
     return target
 
-def bone_group(rig, name='Group'):
-    """Returns a named group inside rig; (probably should find a "bone's" group instead)"""
+def bone_group(src, name=""):
+    """
+    Returns a named group inside rig.
+    if src is a posebone, will return the bone's group instead.
+        If the bone doesn't have a group, will try to return the named group instead.
+    """
 
-    if Is.posebone(rig):
-        rig = rig.id_data
+    group = None
 
-    return rig.pose.bone_groups.get(name)
+    if Is.posebone(src):
+        group = src.bone_group
+
+    if not group:
+        group = src.id_data.pose.bone_groups.get(name)
+
+    return group
 
 def copy(src):
     ""
