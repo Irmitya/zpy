@@ -22,6 +22,102 @@ class event_timer:
 # -------------------------------------------------------------------------
 # region: Animation
 
+def driver(src, path, **kargs):
+    driver_type = kargs.get('driver_type', None)
+        # 'AVERAGE', 'Sum Values', 'SCRIPTED', 'Minimum Value', 'Maximum Value
+    expression = kargs.get('expression', None)
+    frames = kargs.get('frames', list())  # keyframe.co for the driver's fcurve
+    name = kargs.get('name', "var")  # Name of the variable added to the driver
+    overwrite = kargs.get('overwrite', False)  # Delete the existing driver
+    rotation_mode = kargs.get('rotation_mode', 'AUTO')
+    target = kargs.get('target', None)
+    target_path = kargs.get('target_path', '')
+    transform_space = kargs.get('transform_space', 'LOCAL_SPACE')
+    transform_type = kargs.get('transform_type', 'LOC_X')
+    var_type = kargs.get('var_type', None)
+        # 'SINGLE_PROP', 'TRANSFORMS', 'Rotational Difference', 'Distance'
+    if var_type is None:
+        if target and (not target_path):
+            var_type = 'TRANSFORMS'
+        else:
+            var_type = 'SINGLE_PROP'
+
+    Driver = Get.driver(src, path)
+
+    if not Driver:
+        Driver = src.driver_add(path)
+        overwrite = True
+
+    if overwrite:
+        while Driver.keyframe_points:
+            Driver.keyframe_points.remove(Driver.keyframe_points[0])
+
+    if frames:
+        if overwrite:
+            Driver.extrapolation = 'LINEAR'
+            while Driver.modifiers:
+                Driver.modifiers.remove(Driver.modifiers[0])
+        Driver.keyframe_points.add(len(frames))
+        for key, co in zip(Driver.keyframe_points[:], frames):
+            key.interpolation = 'LINEAR'
+            key.co = co
+
+    driver = Driver.driver
+
+    if overwrite:
+        if (expression is None):
+            if (driver_type is None):
+                driver_type = 'AVERAGE'
+            elif (driver.type == 'SCRIPTED'):
+                driver.expression = name
+
+        while driver.variables:
+            driver.variables.remove(driver.variables[0])
+
+    if expression is not None:
+        driver.expression = expression
+    if driver_type:
+        driver.type = driver_type
+
+    var = driver.variables.new()
+    var.name = name
+    var.type = var_type
+    var_target = var.targets[0]
+
+    if target:
+        is_pose = Is.posebone(target)
+        is_bone = Is.bone(target) or Is.editbone(target)
+        is_obj = Is.object(target)
+
+        if is_obj:
+            var_target.id = target
+        elif (is_pose or is_bone):
+            var_target.id = target.id_data
+            var_target.bone_target = target.name
+            if target_path and (not target_path.startswith(('pose.bones', 'bones'))):
+                if is_pose:
+                    text = f'pose.bones["{target.name}"]'
+                else:
+                    text = f'bones["{target.name}"]'
+
+                if (target_path[0] != '['):
+                    text += '.'
+
+                target_path = text + target_path
+        else:
+            try:
+                var_target.id = target
+            except:
+                var_target.id = target.id_data
+
+    var_target.data_path = target_path
+    var_target.rotation_mode = rotation_mode
+    var_target.transform_space = transform_space
+    var_target.transform_type = transform_type
+
+    return Driver
+
+
 def fcurve(action, path, index=-1, group=""):
     """Create a new fcurve in an action if it doesn't exist"""
 
