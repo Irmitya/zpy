@@ -283,24 +283,24 @@ def flip_name(name, split=False, only_split=False):
             name = index[0]
             number = '.' + index[1]
         del index
-    prefix = name  # set now in case none of the checks below get a flip
 
     # /* first case; separator . - _ with extensions r R l L  */
     if ((len(name) > 1) and (name[-2] in (' .-_'))):
         is_set = True
-        previous = name[-1]
+        previous = name[-2:]
+        sep = name[-2]
         if name[-1] == 'l':
-            prefix = name[:-1]
-            replace = 'r'
+            prefix = name[:-2]
+            replace = sep + 'r'
         elif name[-1] == 'r':
-            prefix = name[:-1]
-            replace = 'l'
+            prefix = name[:-2]
+            replace = sep + 'l'
         elif name[-1] == 'L':
-            prefix = name[:-1]
-            replace = 'R'
+            prefix = name[:-2]
+            replace = sep + 'R'
         elif name[-1] == 'R':
-            prefix = name[:-1]
-            replace = 'L'
+            prefix = name[:-2]
+            replace = sep + 'L'
         else:
             is_set = False
             previous = ""
@@ -308,19 +308,20 @@ def flip_name(name, split=False, only_split=False):
     # /* case; beginning with r R l L, with separator after it */
     if ((not is_set) and (len(name) > 1) and (name[1] in (' .-_'))):
         is_set = True
-        previous = name[0]
+        previous = name[:2]
+        sep = name[1]
         if name[0] == 'l':
-            replace = 'r'
-            suffix = name[1:]
+            replace = 'r' + sep
+            suffix = name[2:]
         elif name[0] == 'r':
-            replace = 'l'
-            suffix = name[1:]
+            replace = 'l' + sep
+            suffix = name[2:]
         elif name[0] == 'L':
-            replace = 'R'
-            suffix = name[1:]
+            replace = 'R' + sep
+            suffix = name[2:]
         elif name[0] == 'R':
-            replace = 'L'
-            suffix = name[1:]
+            replace = 'L' + sep
+            suffix = name[2:]
         else:
             is_set = False
             previous = ""
@@ -349,6 +350,8 @@ def flip_name(name, split=False, only_split=False):
                 replace = "RIGHT"
             else:
                 replace = "Right"
+        else:
+            prefix = name
 
     if only_split:
         return (prefix, previous, suffix, number)
