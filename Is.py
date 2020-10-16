@@ -16,7 +16,6 @@ def digit(src):
 
 def float(src):
     """src is a decimal number"""
-    bool = __builtins__['bool']
     float = __builtins__['float']
     if Is.string(src):
         try:
@@ -27,14 +26,13 @@ def float(src):
 
 def int(src):
     """src is a whole number"""
-    bool = __builtins__['bool']
     int = __builtins__['int']
     if Is.string(src):
         try:
             src = Get.as_int(src)
         except:
             return False
-    return isinstance(src, int)
+    return isinstance(src, int) and not Is.bool(src)
 
 def iterable(src):
     """item can be search like a list"""
