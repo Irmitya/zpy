@@ -20,4 +20,5 @@ bl_info = {
     "warning": "Does not need to be enabled",
 }
 
+__addon_enabled__ = False
 register, unregister = bpy.utils.register_classes_factory(())
