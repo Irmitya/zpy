@@ -1044,6 +1044,14 @@ def matrix_constraints(context, src, mat=None, force_constraints=[]):
 
     return utils.multiply_matrix(*mats_cons, mat)
 
+def mirror_bone(bone):
+    if Is.posebone(bone):
+        return bone.id_data.pose.bones.get(utils.flip_name(bone.name))
+    elif Is.editbone(bone):
+        return bone.id_data.edit_bones.get(utils.flip_name(bone.name))
+    elif Is.bone(bone):
+        return bone.id_data.bones.get(utils.flip_name(bone.name))
+
 def objects(context, collection=None, link=False):
     """
     Return the active scene objects pointer list\\
@@ -1091,7 +1099,7 @@ def rig(context, src):
     else:
         assert None, ("Could not find rig for", src)
 
-def selected(context, src=None):
+def selected(context, src=None, mirror=False, mirror_x_only=True):
     """
     return selected objects or selected bones.
     If src is specified, return selected bones from it
@@ -1101,8 +1109,22 @@ def selected(context, src=None):
 
     if mode in ('POSE', 'PAINT_WEIGHT'):
         selected = Get.selected_pose_bones(context, src)
+        if mirror:
+            for bone in selected:
+                rig = bone.id_data
+                if (rig.pose.use_mirror_x or not mirror_x_only):
+                    flip = rig.pose.bones.get(utils.flip_name(bone.name))
+                    if flip and (flip not in selected):
+                        selected.append(flip)
     elif mode == 'EDIT_ARMATURE':
         selected = Get.selected_edit_bones(context, src)
+        if mirror:
+            for bone in selected:
+                arm = bone.id_data
+                if (arm.use_mirror_x or not mirror_x_only):
+                    flip = arm.edit_bones.get(utils.flip_name(bone.name))
+                    if flip and (flip not in selected):
+                        selected.append(flip)
     else:
         selected = Get.selected_objects(context, True)
 
