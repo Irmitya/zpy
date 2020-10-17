@@ -345,20 +345,20 @@ def visible(context, src, viewport=False):
             res = src.visible_get(view_layer=vl)
             return res
     elif Is.posebone(src):
-        if not src.bone.hide:
+        if src.bone.hide:
+            return False
+        else:
             return bool(Get.visible_armature_layers(src, src.id_data.data))
-        else:
-            return False
     elif Is.bone(src) or Is.editbone(src):
-        if not src.hide:
+        if src.hide:
+            return False
+        else:
             return bool(Get.visible_armature_layers(src, src.id_data))
-        else:
-            return False
     elif Is.collection(src):
-        if not src.hide_viewport:
-            return Is.in_view(context, src)
-        else:
+        if src.hide_viewport:
             return False
+        else:
+            return Is.in_view(context, src)
     else:
         assert None, ("Is.visible(), has not accounted for this type",
             src, type(src)
