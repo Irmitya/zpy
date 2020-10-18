@@ -326,6 +326,9 @@ def flip_name(name, split=False, only_split=False):
             is_set = False
             previous = ""
 
+    if (not is_set):
+        prefix = name
+
     if (not is_set and len(name) > 5):
         # /* hrms, why test for a separator? lets do the rule 'ultimate left or right' */
         if name.lower().startswith("right") or name.lower().endswith("right"):
@@ -350,8 +353,6 @@ def flip_name(name, split=False, only_split=False):
                 replace = "RIGHT"
             else:
                 replace = "Right"
-        else:
-            prefix = name
 
     if only_split:
         return (prefix, previous, suffix, number)
