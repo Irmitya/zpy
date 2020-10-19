@@ -151,10 +151,10 @@ def connected(src, pseudo=True):
 
     # if not src.bone.use_connect and (not src.parent or src.bone.head_local != src.bone.parent.tail_local):
     if Is.posebone(src):
-        pbone = src.bone
+        bone = src.bone
     elif Is.bone(src) or Is.editbone(src):
-        pbone = src
-        src = Get.rig(bpy.context, src).pose.bones[src.name]
+        bone = src
+        src = Get.rig(bpy.context, src).pose.bones.get(src.name)
     else:
         if not Is.object(src):
             assert None, ("Is.connected() checked on invalid item",
@@ -162,15 +162,22 @@ def connected(src, pseudo=True):
             )
         return
 
-    if pbone.parent:
-        if (src.bone.use_connect):
+    if bone.parent:
+        if (bone.use_connect):
             return True
-        elif pseudo and (src.bone.head_local == src.bone.parent.tail_local):
-            if not sum(src.lock_location) and sum(src.location) >= 0.0001:
-                # bone was moved and wasn't locked
-                return False
+        elif pseudo:
+            if Is.bone(src):
+                connect = (bone.head_local == bone.parent.tail_local)
             else:
-                return True
+                connect = (bone.head == bone.parent.tail)
+
+            if connect:
+                if src and (not sum(src.lock_location)) and (sum(src.location) >= 0.0001):
+                    # bone wasn't locked and was moved and wasn't locked
+                    return False
+                else:
+                    # If pose bone doesn't exist, it was just created
+                    return True
 
     return False
 
