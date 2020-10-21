@@ -1045,12 +1045,16 @@ def matrix_constraints(context, src, mat=None, force_constraints=[]):
     return utils.multiply_matrix(*mats_cons, mat)
 
 def mirror_bone(bone):
+    name = utils.flip_name(bone.name)
+    if name == bone.name:
+        return
+
     if Is.posebone(bone):
-        return bone.id_data.pose.bones.get(utils.flip_name(bone.name))
+        return bone.id_data.pose.bones.get(name)
     elif Is.editbone(bone):
-        return bone.id_data.edit_bones.get(utils.flip_name(bone.name))
+        return bone.id_data.edit_bones.get(name)
     elif Is.bone(bone):
-        return bone.id_data.bones.get(utils.flip_name(bone.name))
+        return bone.id_data.bones.get(name)
 
 def objects(context, collection=None, link=False):
     """
