@@ -1,10 +1,16 @@
 import bpy
 
 # utils
-from . import cpp, Get, Is, utils
+from .cpp import cpp
+from .Get import Get
+from .Is import Is
+from .utils import utils
 
 # functions
-from . import keyframe, New, popup, Set
+from .keyframe import keyframe
+from .New import New
+from .popup import popup
+from .Set import Set
 
 # functions that are initialized()
 from .register_keymaps import register_keymaps
