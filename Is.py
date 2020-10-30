@@ -266,23 +266,23 @@ def in_visible_armature_layers(bone, arm):
     ]
 
 def linked(src):
-    """Find is something is from an external blend file"""
-    if Is.posebone(src):
-        obj = src.id_data
-    elif Is.object(src):
-        obj = src
-    elif Is.bone(src):
-        return bool(src.id_data.library)
+    """Find if something is from an external blend file"""
+    if Is.object(src):
+        if (src.library or src.proxy):
+            return True
+        elif (src.data and src.data.library):
+            return True
+        else:
+            return False
+    elif Is.armature(src, False):
+        return bool(src.library)
+    elif Is.posebone(src) or Is.bone(src):
+        return Is.linked(src.id_data)
     elif Is.editbone(src):
         # You can't access edit bones without edit mode
         return False
     else:
         assert None, ("Have not calculated for this data type " + repr(src))
-
-    if obj.proxy or obj.library:
-        return True
-    else:
-        return False
 
 def panel_expanded(context):
     """
