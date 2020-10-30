@@ -589,7 +589,7 @@ def sorted_chains(selected):
 
     chains = []
     for bone in selected:
-        if not Is.posebone(bone):
+        if not any((Is.posebone(bone), Is.bone(bone), Is.editbone(bone))):
             continue
         chain = []
         end = True
