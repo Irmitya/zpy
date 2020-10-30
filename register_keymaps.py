@@ -99,6 +99,36 @@ class register_keymaps():
 
         return kmi.properties
 
+    def panel(self, panel, *args, **kwargs):
+        """
+        Register hotkey for creating a popup panel
+        panel = PANEL_PT_name
+        """
+
+        key = self.add('wm.call_panel', *args, **kwargs)
+        key.name = panel
+        return key
+
+    def menu(self, menu, *args, **kwargs):
+        """
+        Register hotkey for creating a popup menu
+        menu = MENU_MT_name
+        """
+
+        key = self.add('wm.call_menu', *args, **kwargs)
+        key.name = menu
+        return key
+
+    def pie(self, menu, *args, **kwargs):
+        """
+        Register hotkey for creating a popup menu
+        menu = MENU_MT_name
+        """
+
+        key = self.add('wm.call_menu_pie', *args, **kwargs)
+        key.name = menu
+        return key
+
     def remove(self):
         "Revert keymap back to normal"
         for (keymap, kmis) in self.addon_keymaps.items():
