@@ -584,6 +584,34 @@ def reverse(src):
 
     return inverse
 
+def sorted_bones(selected):
+    "Scan through selected bones to find order of bones in a a tree"
+
+    selected = [b for b in selected
+                if (Is.posebone(b) or Is.bone(b) or Is.editbone(b))]
+    bones = list()
+
+    while selected:
+        for bone in list(selected):
+            if (bone not in selected):
+                # a previous bone was one of this bone's parents
+                continue
+
+            for parent in bone.parent_recursive:
+                if parent in selected:
+                    break
+            else:
+                bones.append(bone)
+                selected.remove(bone)
+
+                # Loop over children, which "may" result in less looping
+                for child in bone.children_recursive:
+                    if child in selected:
+                        bones.append(child)
+                        selected.remove(child)
+
+    return bones
+
 def sorted_chains(selected):
     "Scan through selected bones to find order of bones for spline_ik chains"
 
