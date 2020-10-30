@@ -66,13 +66,18 @@ def string(src):
 # -------------------------------------------------------------------------
 # region: Blender type
 
-def armature(src):
+def armature(src, is_object=True):
     """
-    src is an armature object \\
-    (TODO: check for armature data type, separately from rig object)
+    src is a rig/armature \\
+    is_object means check if it is specifically the armature-object
     """
-    bool = __builtins__['bool']
-    return bool(Is.object(src) and src.type in {'ARMATURE'})
+    if Is.object(src):
+        arm = src.data
+    else:
+        if is_object:
+            return False
+        arm = src
+    return isinstance(arm, bpy.types.Armature)
 
 def bone(src):
     """
