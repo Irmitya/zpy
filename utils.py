@@ -579,6 +579,9 @@ def register_collection(cls, **kwargs):
     kwargs are optional additional paramenter to insert in the type\\
     """
 
+    kwargs.setdefault('options', {'LIBRARY_EDITABLE'})
+    kwargs.setdefault('override', {'LIBRARY_OVERRIDABLE', 'USE_INSERTION'})
+    # 'NO_PROPERTY_NAME',  # Do not use the names of the items, only their indices in the collection
     if hasattr(cls, 'is_registered') and (not cls.is_registered):
         bpy.utils.register_class(cls)
     cls_registered = bpy.props.CollectionProperty(type=cls, **kwargs)
@@ -591,6 +594,8 @@ def register_pointer(cls, **kwargs):
     kwargs are optional additional paramenter to insert in the type\\
     """
 
+    kwargs.setdefault('options', {'LIBRARY_EDITABLE'})
+    kwargs.setdefault('override', {'LIBRARY_OVERRIDABLE'})
     if hasattr(cls, 'is_registered') and (not cls.is_registered):
         bpy.utils.register_class(cls)
     cls_registered = bpy.props.PointerProperty(type=cls, **kwargs)
