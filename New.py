@@ -305,7 +305,7 @@ def bone(context, armature, name="", edit=None, pose=None, overwrite=False):
     # Go into Edit mode and create a new bone
     ebones = armature.data.edit_bones
     if armature.mode != 'EDIT':
-        Set.mode(context, armature, 'EDIT')
+        Set.mode(context, 'EDIT', armature)
     mirror = armature.data.use_mirror_x
     armature.data.use_mirror_x = False
     children = list()

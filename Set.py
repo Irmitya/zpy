@@ -248,7 +248,7 @@ def active_select(context, target, isolate=True):  # , isolate_mode=False):
 
     # def deselect(src):
         # if isolate_mode and src.id_data.mode != 'OBJECT':
-        #     Set.mode(context, src, 'OBJECT')
+        #     Set.mode(context, 'OBJECT', src)
         # Set.select(src, False)
 
     if isolate:
@@ -263,7 +263,7 @@ def active_select(context, target, isolate=True):  # , isolate_mode=False):
     Set.active(context, target)
     Set.select(target, True)
     if Is.posebone(target):
-        Set.mode(context, target, 'POSE')
+        Set.mode(context, 'POSE', target)
 
 def constraint_toggle(context, srcs, constraints, influence=None, insert_key=None):
     """Disable constraint while maintaining the visual transform."""
@@ -381,7 +381,7 @@ def in_scene(context, object, value=True):
         elif not (Is.in_scene(context, object) and Is.in_view(context, object)):
             Get.objects(context, link=True).link(object)
 
-def mode(context, target, mode, keep_visiblity=True):
+def mode(context, mode, target=None, keep_visiblity=True):
     """
     Set the context.mode for an object (or bone's rig)
     """
