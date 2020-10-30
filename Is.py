@@ -5,18 +5,16 @@ from zpy import Get
 # -------------------------------------------------------------------------
 # region: Python types
 
-def bool(src):
+def _bool(src):
     """item is True or False"""
-    bool = __builtins__['bool']
     return isinstance(src, bool)
 
 def digit(src):
     """item is a number"""
     return (Is.float(src) or Is.int(src))
 
-def float(src):
+def _float(src):
     """src is a decimal number"""
-    float = __builtins__['float']
     if Is.string(src):
         try:
             src = Get.as_float(src)
@@ -24,9 +22,8 @@ def float(src):
             return False
     return isinstance(src, float)
 
-def int(src):
+def _int(src):
     """src is a whole number"""
-    int = __builtins__['int']
     if Is.string(src):
         try:
             src = Get.as_int(src)
@@ -88,7 +85,6 @@ def bone(src):
 
 def camera(src):
     """src is a camera object"""
-    bool = __builtins__['bool']
     return bool(Is.object(src) and src.type in {'CAMERA'})
 
 def collection(src):
@@ -96,7 +92,6 @@ def collection(src):
 
 def curve(src):
     """src is a curve object"""
-    bool = __builtins__['bool']
     return bool(Is.object(src) and src.type in {'CURVE'})
 
 def editbone(src):
@@ -105,22 +100,18 @@ def editbone(src):
 
 def empty(src):
     """src is an empty object"""
-    bool = __builtins__['bool']
     return bool(Is.object(src) and not src.data)
 
 def gpencil(src):
     """src is a grease pencil object"""
-    bool = __builtins__['bool']
     return bool(Is.object(src) and src.type == 'GPENCIL')
 
 def light(src):
     """src is a light object"""
-    bool = __builtins__['bool']
     return bool(Is.object(src) and src.type in {'LIGHT', 'LAMP'})
 
 def mesh(src):
     """Item is a mesh object"""
-    bool = __builtins__['bool']
     return bool(Is.object(src) and src.type in {'MESH'})
 
 def nla_strip(src):
@@ -334,7 +325,6 @@ def visible(context, src, viewport=False):
     Object not hidden and in a visible layer/collection\\
     Bone not hidden and in a visible layer of it's armature
     """
-    bool = __builtins__['bool']
 
     if Is.object(src):
         if viewport:
@@ -380,4 +370,4 @@ def visible(context, src, viewport=False):
 # -------------------------------------------------------------------------
 
 
-Is = type('', (), globals())
+Is = type('', (), dict(**globals(), bool=_bool, float=_float, int=_int))
