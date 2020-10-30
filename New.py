@@ -328,14 +328,14 @@ def bone(context, armature, name="", edit=None, pose=None, overwrite=False):
 
     pbones = armature.pose.bones
     if pose:
-        Set.mode(context, armature, 'POSE')
+        Set.mode(context, 'POSE', armature)
         bone = pbones[name]
         pose(bone)
 
     # Revert mode change
     if mode != armature.mode:
         # Set.active(active)
-        Set.mode(context, armature, mode)
+        Set.mode(context, mode, armature)
     Set.visible(context, armature, is_visible)
 
     if armature.mode == 'EDIT':
